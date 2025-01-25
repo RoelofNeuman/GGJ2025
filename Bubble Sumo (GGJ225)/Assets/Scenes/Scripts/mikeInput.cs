@@ -8,28 +8,34 @@ using TMPro;
 public class mikeInput : MonoBehaviour
 {
     public float micSenitivity1 = 100f; // mouse sensitivity
-    public float micSenitivity2 = 100f; // mouse sensitivity
     public float PlayerMoveSpeed1 = 1f; // player movespeed
-    public float PlayerMoveSpeed2 = 1f; // player movespeed
     
     public TMP_Dropdown micDropdown1;
-    public TMP_Dropdown micDropdown2;
-    //public Dropdown micDropdown;
+    //public Dropdown micDropdown1;
 
     public List<string> mikeList = new List<string>(); //list from mic devices 
     public string micreophoneDeviceName1; //name of input mic 
-    public string micreophoneDeviceName2; //name of input mic 
 
     private AudioClip micInput1; //detect input mic 
-    private AudioClip micInput2; //detect input mic 
 
     private bool micStart1; // if mic is detected 
-    private bool micStart2; // if mic is detected 
 
     private int sampleWindow = 128; //samples for analysis 
 
+
+
+    private bool canMove = true;
+    //knockback
+    public float kb;
+    public float kbStunTime;
+    public Rigidbody body;
+
+
+
     private void Start() //on start, start detecting microphone input 
     {
+        canMove = true;
+        
         PopulateMic();
         
     }
@@ -46,15 +52,6 @@ public class mikeInput : MonoBehaviour
             }
         }
 
-        if (micStart2)
-        {
-            float volume2 = GetMicrophoneVolume(micInput2, micreophoneDeviceName2); //set volume to mic volume
-
-            if (volume2 > micSenitivity2 / 1000f) //if volume is greater tahn teh sensitivity 
-            {
-                transform.Translate(Vector3.right * -PlayerMoveSpeed2 * Time.deltaTime);// move the player to the left 
-            }
-        }
     }
 
     private void PopulateMic()
@@ -69,16 +66,11 @@ public class mikeInput : MonoBehaviour
 
         if (mikeList.Count > 0) //populate the dropdown
         {
-            micDropdown1.ClearOptions();
+            //micDropdown1.ClearOptions();
             micDropdown1.AddOptions(mikeList);
             micDropdown1.onValueChanged.AddListener(delegate { selectedMicrophones1(micDropdown1.value); });
 
-            micDropdown2.ClearOptions();
-            micDropdown2.AddOptions(mikeList);
-            micDropdown2.onValueChanged.AddListener(delegate { selectedMicrophones2(micDropdown2.value); });
-
             selectedMicrophones1(0); //set default microphones 
-            selectedMicrophones2(0);
         }
         else
         {
@@ -93,16 +85,6 @@ public class mikeInput : MonoBehaviour
         {
             micreophoneDeviceName1 = mikeList[index];
             MicroStartingPlayer1();
-        }
-    }
-
-    private void selectedMicrophones2(int index)
-    {
-        //set selected mic for player 2
-        if (index >= 0 && index < mikeList.Count)
-        {
-            micreophoneDeviceName2 = mikeList[index];
-            MicroStartingPlayer2();
         }
     }
 
@@ -123,26 +105,6 @@ public class mikeInput : MonoBehaviour
             while (Microphone.GetPosition(micreophoneDeviceName1) <= 0) { }
 
             micStart1 = true;
-        }
-        else
-        {
-            Debug.LogError("no mic detected");
-        }
-    }
-    
-    private void MicroStartingPlayer2()
-    {
-        if (!string.IsNullOrEmpty(micreophoneDeviceName2)) 
-        {
-            if(micInput2 != null)
-            {
-                Microphone.End(micreophoneDeviceName2);
-            }
-            micInput2 = Microphone.Start(micreophoneDeviceName2, true, 10, AudioSettings.outputSampleRate);
-
-            while (Microphone.GetPosition(micreophoneDeviceName2) <= 0) { }
-
-            micStart2 = true;
         }
         else
         {
@@ -177,9 +139,9 @@ public class mikeInput : MonoBehaviour
 
     }
 
-    //private float getMicVolume (AudioClip micInput, string micDevice)
+    //private float getMicVolume(AudioClip micInput, string micDevice)
     //{
-    //    if(micInput == null)
+    //    if (micInput == null)
     //    {
     //        return 0f;
     //    }
@@ -187,7 +149,7 @@ public class mikeInput : MonoBehaviour
     //    float[] sample = new float[sampleWindow];
     //    int micPosition = Microphone.GetPosition(micDevice) - sampleWindow + 1;
 
-    //    if(micPosition < 0)
+    //    if (micPosition < 0)
     //    {
     //        return 0f;
     //    }
@@ -195,7 +157,7 @@ public class mikeInput : MonoBehaviour
     //    micInput.GetData(sample, micPosition);
 
     //    float sum = 0f;
-    //    for (int i = 0; i < sampleWindow;i++)
+    //    for (int i = 0; i < sampleWindow; i++)
     //    {
     //        sum += sample[i] * sample[i];
     //    }
@@ -208,11 +170,24 @@ public class mikeInput : MonoBehaviour
         {
             Microphone.End(micreophoneDeviceName1);
         }
-        if (micInput2)
-        {
-            Microphone.End(micreophoneDeviceName2);
-        }
     }
+
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    if(collision.gameObject.CompareTag("Player"))
+    //    {
+
+    //        canMove = false;
+
+    //        StartCoroutine(knockbackStunTime(kbStunTime));
+    //    }
+    //}
+
+    //IEnumerator knockbackStunTime(float cooldown)
+    //{
+    //    yield return new WaitForSeconds(cooldown);
+    //    canMove = true;
+    //}
 }
 
 
