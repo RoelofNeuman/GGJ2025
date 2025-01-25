@@ -8,8 +8,7 @@ using TMPro;
 public class mikeInput : MonoBehaviour
 {
     public float micSenitivity1 = 100f; // mouse sensitivity
-    public float PlayerMoveSpeed1 = 1f; // player movespeed
-    
+
     public TMP_Dropdown micDropdown1;
     //public Dropdown micDropdown1;
 
@@ -22,34 +21,25 @@ public class mikeInput : MonoBehaviour
 
     private int sampleWindow = 128; //samples for analysis 
 
-
-
-    private bool canMove = true;
-    //knockback
-    public float kb;
-    public float kbStunTime;
-    public Rigidbody body;
-
     //other stuff
     public ParticleSystem bubbleParticles;
-    public float playerDistance;
+    public Transform bubblePosition; // New variable to store the fixed position for the particle system
     private float bubbleDuration;
-
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
         bubbleDuration = bubbleParticles.main.startLifetime.constant;
+        if (bubblePosition == null)
+        {
+            Debug.LogError("No Bubble Position assigned.");
+        }
     }
-
 
     private void Start() //on start, start detecting microphone input 
     {
-        canMove = true;
-        
         PopulateMic();
-        
     }
 
     private void Update()
@@ -58,44 +48,67 @@ public class mikeInput : MonoBehaviour
         {
             float volume1 = GetMicrophoneVolume(micInput1, micreophoneDeviceName1); // Get mic volume
 
-            if (volume1 > micSenitivity1 / 1000f) // If volume exceeds sensitivity
-            {
-                transform.Translate(Vector3.up * PlayerMoveSpeed1 * Time.deltaTime); // Move player to the left
-            }
-
-            // Adjust particle effect based on mic volume
+            // Smoothly adjust particle effect based on mic volume
             AdjustParticleEffect(volume1);
         }
-
-        float playerMiddleDistance = playerDistance / 2;
     }
 
     private void AdjustParticleEffect(float micVolume)
     {
-        // Adjust particle properties based on mic volume
+        // Define minimum and maximum effect values
+        float minLifetime = 0.5f;
+        float maxLifetime = 5f;
+
+        float minSpeed = 1f;
+        float maxSpeed = 20f;
+
+        float minEmissionRate = 10f;
+        float maxEmissionRate = 100f;
+
+        // Smoothly interpolate between the minimum and maximum values
+        float lifetime = Mathf.Lerp(minLifetime, maxLifetime, micVolume); // Scale lifetime smoothly
+        float speed = Mathf.Lerp(minSpeed, maxSpeed, micVolume);          // Scale speed smoothly
+        float emissionRate = Mathf.Lerp(minEmissionRate, maxEmissionRate, micVolume); // Scale emission rate smoothly
+
+        // Apply the interpolated values to the particle system
         var main = bubbleParticles.main;
-        main.startLifetime = micVolume * 2f; // Adjust lifetime (scale by 2)
-        main.startSpeed = micVolume * 10f;  // Adjust speed (scale by 10)
+        main.startLifetime = lifetime;
+        main.startSpeed = speed;
 
         var emission = bubbleParticles.emission;
-        emission.rateOverTime = micVolume * 50f; // Adjust emission rate (scale by 50)
+        emission.rateOverTime = emissionRate;
 
+        // Adjust the particle size based on microphone volume
+        float minSize = 0.5f;  // Minimum size of the particles
+        float maxSize = 2f;    // Maximum size of the particles
 
+        // Use micVolume to interpolate between the minSize and maxSize
+        float particleSize = Mathf.Lerp(minSize, maxSize, micVolume);
+
+        // Apply the size change
+        var sizeOverLifetime = bubbleParticles.sizeOverLifetime;
+        sizeOverLifetime.enabled = true;
+        sizeOverLifetime.size = new ParticleSystem.MinMaxCurve(particleSize);
+
+        // Keep the particle system at a fixed position
+        if (bubblePosition != null)
+        {
+            bubbleParticles.transform.position = bubblePosition.position;
+        }
     }
 
     private void PopulateMic()
     {
-        //clear existing list of device check new avalable ones 
+        //clear existing list of device check new available ones 
         mikeList.Clear();
 
-        foreach (var device in Microphone.devices) 
+        foreach (var device in Microphone.devices)
         {
             mikeList.Add(device);
         }
 
         if (mikeList.Count > 0) //populate the dropdown
         {
-            //micDropdown1.ClearOptions();
             micDropdown1.AddOptions(mikeList);
             micDropdown1.onValueChanged.AddListener(delegate { selectedMicrophones1(micDropdown1.value); });
 
@@ -103,48 +116,51 @@ public class mikeInput : MonoBehaviour
         }
         else
         {
-            Debug.LogError("no microphone detected");
+            Debug.LogError("No microphone detected!");
+            // Provide UI feedback if no mic is detected
+            micDropdown1.GetComponentInChildren<TMP_Text>().text = "No microphones available";
         }
     }
 
     private void selectedMicrophones1(int index)
     {
         //set selected microphone for player 1
-        if (index >= 0 && index < mikeList.Count) 
+        if (index >= 0 && index < mikeList.Count)
         {
             micreophoneDeviceName1 = mikeList[index];
-            MicroStartingPlayer1();
+            StartCoroutine(MicroStartingPlayer1());
         }
     }
 
-
-    private void MicroStartingPlayer1()
+    private IEnumerator MicroStartingPlayer1()
     {
-        //initialise mic input
-        if (!string.IsNullOrEmpty(micreophoneDeviceName1)) 
+        //initialize mic input asynchronously
+        if (!string.IsNullOrEmpty(micreophoneDeviceName1))
         {
-            if(micInput1 != null)
+            if (micInput1 != null)
             {
                 //stop prev mic input
                 Microphone.End(micreophoneDeviceName1);
             }
             micInput1 = Microphone.Start(micreophoneDeviceName1, true, 10, AudioSettings.outputSampleRate);
 
-            //wait till mic is ready 
-            while (Microphone.GetPosition(micreophoneDeviceName1) <= 0) { }
+            while (Microphone.GetPosition(micreophoneDeviceName1) <= 0)
+            {
+                yield return null; // Wait for the microphone to be ready without freezing the game
+            }
 
             micStart1 = true;
         }
         else
         {
-            Debug.LogError("no mic detected");
+            Debug.LogError("No mic detected");
         }
     }
 
-    private float GetMicrophoneVolume(AudioClip micInput,string micDevice)
+    private float GetMicrophoneVolume(AudioClip micInput, string micDevice)
     {
-        //return 0 if no mic avalable 
-        if(micInput == null)
+        //return 0 if no mic available 
+        if (micInput == null)
         {
             return 0f;
         }
@@ -155,47 +171,21 @@ public class mikeInput : MonoBehaviour
         if (micPosition < 0)
         { return 0f; }
 
-        micInput.GetData(sample, micPosition); //fetch audit data into the buffer 
+        micInput.GetData(sample, micPosition); //fetch audio data into the buffer 
 
-        //calc avrg volume from asmple 
+        //calc avrg volume from sample 
         float sum = 0f;
 
         for (int i = 0; i < sampleWindow; i++)
         {
             sum += sample[i] * sample[i];
         }
-        return Mathf.Sqrt(sum / sampleWindow); //return RMs value of teh sample 
-
-    }
-
-    private float getMicVolume(AudioClip micInput, string micDevice)
-    {
-        if (micInput == null)
-        {
-            return 0f;
-        }
-
-        float[] sample = new float[sampleWindow];
-        int micPosition = Microphone.GetPosition(micDevice) - sampleWindow + 1;
-
-        if (micPosition < 0)
-        {
-            return 0f;
-        }
-
-        micInput.GetData(sample, micPosition);
-
-        float sum = 0f;
-        for (int i = 0; i < sampleWindow; i++)
-        {
-            sum += sample[i] * sample[i];
-        }
-        return Mathf.Sqrt(sum / sampleWindow);
+        return Mathf.Sqrt(sum / sampleWindow); //return RMS value of the sample 
     }
 
     private void OnApplicationQuit()
     {
-        if (micInput1)//stop mic input when end of game 
+        if (micInput1) //stop mic input when end of game 
         {
             Microphone.End(micreophoneDeviceName1);
         }
