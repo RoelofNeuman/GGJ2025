@@ -30,6 +30,18 @@ public class mikeInput : MonoBehaviour
     public float kbStunTime;
     public Rigidbody body;
 
+    //other stuff
+    public ParticleSystem bubbleParticles;
+    public float playerDistance;
+    private float bubbleDuration;
+
+
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Awake()
+    {
+        bubbleDuration = bubbleParticles.main.startLifetime.constant;
+    }
 
 
     private void Start() //on start, start detecting microphone input 
@@ -40,17 +52,34 @@ public class mikeInput : MonoBehaviour
         
     }
 
-    private void Update() 
+    private void Update()
     {
-        if (micStart1) //if the mic starts 
+        if (micStart1) // If the mic starts 
         {
-            float volume1 = GetMicrophoneVolume(micInput1, micreophoneDeviceName1); //set volume to mic volume
+            float volume1 = GetMicrophoneVolume(micInput1, micreophoneDeviceName1); // Get mic volume
 
-            if (volume1 > micSenitivity1 / 1000f) //if volume is greater tahn teh sensitivity 
+            if (volume1 > micSenitivity1 / 1000f) // If volume exceeds sensitivity
             {
-                transform.Translate(Vector3.right * -PlayerMoveSpeed1 *  Time.deltaTime);// move the player to the left 
+                transform.Translate(Vector3.up * PlayerMoveSpeed1 * Time.deltaTime); // Move player to the left
             }
+
+            // Adjust particle effect based on mic volume
+            AdjustParticleEffect(volume1);
         }
+
+        float playerMiddleDistance = playerDistance / 2;
+    }
+
+    private void AdjustParticleEffect(float micVolume)
+    {
+        // Adjust particle properties based on mic volume
+        var main = bubbleParticles.main;
+        main.startLifetime = micVolume * 2f; // Adjust lifetime (scale by 2)
+        main.startSpeed = micVolume * 10f;  // Adjust speed (scale by 10)
+
+        var emission = bubbleParticles.emission;
+        emission.rateOverTime = micVolume * 50f; // Adjust emission rate (scale by 50)
+
 
     }
 
@@ -139,30 +168,30 @@ public class mikeInput : MonoBehaviour
 
     }
 
-    //private float getMicVolume(AudioClip micInput, string micDevice)
-    //{
-    //    if (micInput == null)
-    //    {
-    //        return 0f;
-    //    }
+    private float getMicVolume(AudioClip micInput, string micDevice)
+    {
+        if (micInput == null)
+        {
+            return 0f;
+        }
 
-    //    float[] sample = new float[sampleWindow];
-    //    int micPosition = Microphone.GetPosition(micDevice) - sampleWindow + 1;
+        float[] sample = new float[sampleWindow];
+        int micPosition = Microphone.GetPosition(micDevice) - sampleWindow + 1;
 
-    //    if (micPosition < 0)
-    //    {
-    //        return 0f;
-    //    }
+        if (micPosition < 0)
+        {
+            return 0f;
+        }
 
-    //    micInput.GetData(sample, micPosition);
+        micInput.GetData(sample, micPosition);
 
-    //    float sum = 0f;
-    //    for (int i = 0; i < sampleWindow; i++)
-    //    {
-    //        sum += sample[i] * sample[i];
-    //    }
-    //    return Mathf.Sqrt(sum / sampleWindow);
-    //}
+        float sum = 0f;
+        for (int i = 0; i < sampleWindow; i++)
+        {
+            sum += sample[i] * sample[i];
+        }
+        return Mathf.Sqrt(sum / sampleWindow);
+    }
 
     private void OnApplicationQuit()
     {
@@ -172,22 +201,6 @@ public class mikeInput : MonoBehaviour
         }
     }
 
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    if(collision.gameObject.CompareTag("Player"))
-    //    {
-
-    //        canMove = false;
-
-    //        StartCoroutine(knockbackStunTime(kbStunTime));
-    //    }
-    //}
-
-    //IEnumerator knockbackStunTime(float cooldown)
-    //{
-    //    yield return new WaitForSeconds(cooldown);
-    //    canMove = true;
-    //}
 }
 
 
