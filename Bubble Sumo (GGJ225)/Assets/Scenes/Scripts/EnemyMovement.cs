@@ -2,9 +2,7 @@ using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
 {
-
     // dont touch yet plz :)
-
 
     // Public variables to control movement behavior
     public float minMoveDistance = 1f; // Minimum distance the enemy will move
