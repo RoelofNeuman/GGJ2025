@@ -8,6 +8,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/CountdownSceneSarah.unity
+    guid: 93fd752cd035f2346b2ad40670cf07fa
+  - enabled: 1
+    path: Assets/Scenes/Sarah Scene 1.unity
+    guid: 59a82dd9f8332234e82414201fcb0c49
+  - enabled: 1
+    path: Assets/Scenes/Sarah Scene.unity
+    guid: 4b221ce960cb8634b93430c44b9dbe01
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

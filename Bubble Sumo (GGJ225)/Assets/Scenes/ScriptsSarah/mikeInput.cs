@@ -196,7 +196,7 @@ public class mikeInput : MonoBehaviour
                 //stop prev mic input
                 Microphone.End(micreophoneDeviceName1);
             }
-            micInput1 = Microphone.Start(micreophoneDeviceName1, true, 10, AudioSettings.outputSampleRate);
+            micInput1 = Microphone.Start(micreophoneDeviceName1, true, 10, AudioSettings.outputSampleRate); //when dont want add end so you dont get the microphone recording, when other stuff is happening stop emmiter so no play
 
            while (Microphone.GetPosition(micreophoneDeviceName1) <= 0)
            {
