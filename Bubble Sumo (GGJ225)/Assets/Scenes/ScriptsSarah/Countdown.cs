@@ -8,18 +8,17 @@ using UnityEngine.UI;
 
 public class Countdown : MonoBehaviour
 {
-    public TextMeshProUGUI countdownText; // Reference to the TextMeshPro UI element
-    public float countdownTime = 3f; // Starting countdown time in seconds
+    //public TextMeshProUGUI countdownText; // Reference to the TextMeshPro UI element
+    public int countdownTime = 3; // Starting countdown time in seconds
     public string nextSceneName; // Name of the scene to load
+    public GameObject one;
+    public GameObject two;
+    public GameObject three;
+    public GameObject blow;
 
     private void Start()
     {
-        if (countdownText == null)
-        {
-            Debug.LogError("Countdown Text is not assigned!");
-            return;
-        }
-
+           
         if (string.IsNullOrEmpty(nextSceneName))
         {
             Debug.LogError("Next scene name is not specified!");
@@ -29,27 +28,47 @@ public class Countdown : MonoBehaviour
         // Start the countdown
         StartCoroutine(StartCountdown());
     }
+  
 
     private System.Collections.IEnumerator StartCountdown()
     {
-        float remainingTime = countdownTime;
-
+        countdownTime = 3;
         // Countdown loop
-        while (remainingTime > 0)
+        while (countdownTime > 0)
         {
-            countdownText.text = Mathf.CeilToInt(remainingTime).ToString(); // Update text to show remaining time
+            if (countdownTime == 1)
+            {
+                one.SetActive(true);
+                two.SetActive(false);
+                three.SetActive(false);
+
+            }
+            if (countdownTime == 2)
+            {
+                one.SetActive(false);
+                two.SetActive(true);
+                three.SetActive(false);
+                
+            }
+            if (countdownTime == 3)
+            {
+                one.SetActive(false);
+                two.SetActive(false);
+                three.SetActive(true);
+            }
+            
             yield return new WaitForSeconds(1f); // Wait 1 second
-            remainingTime--;
+            countdownTime= countdownTime -1;
+            Debug.Log(countdownTime);
         }
 
         // Show "GO!" briefly
-        countdownText.text = "GO!";
+        one.SetActive(false);
+        blow.SetActive(true);
         yield return new WaitForSeconds(1f);
 
         // Change the scene
         SceneManager.LoadScene(4);
-
-
     }
 }
 
