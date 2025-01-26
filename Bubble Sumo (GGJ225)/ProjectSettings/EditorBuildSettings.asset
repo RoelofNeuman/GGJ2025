@@ -18,7 +18,7 @@ EditorBuildSettings:
     path: Assets/Scenes/AccGameScenes/CountdownSceneSarah.unity
     guid: 93fd752cd035f2346b2ad40670cf07fa
   - enabled: 1
-    path: Assets/Scenes/Sarah Scene.unity
+    path: Assets/Scenes/Blowing scene.unity
     guid: 4b221ce960cb8634b93430c44b9dbe01
   - enabled: 1
     path: Assets/Scenes/Sarah Scene 1.unity
