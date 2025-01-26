@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class WaypointMover : MonoBehaviour
 {
@@ -41,6 +42,7 @@ public class WaypointMover : MonoBehaviour
             // Check if it's the last waypoint
             if (currentWaypointIndex == waypoints.Count - 1)
             {
+
                 EndGame();
             }
             else
@@ -62,10 +64,19 @@ public class WaypointMover : MonoBehaviour
 
     private void EndGame()
     {
-        // Logic to end the game
+
+
+        //if (CompareTag("Player"))
+        //{
+        //    GameObject player = gameObject.GetComponent<GameObject>();
+        //    Application.Quit();
+        //    Debug.LogError("no work");
+        //}
+
+        ////Logic to end the game
         Debug.Log("You have reached the last waypoint! Game Over.");
-        // You can add additional logic here like quitting the game or loading a new scene.
         Application.Quit(); // This will close the game if running as a build
-        UnityEditor.EditorApplication.isPlaying = false; // Uncomment this line for Editor play mode (stop game in the editor)
+        UnityEditor.EditorApplication.isPlaying = false;
+
     }
 }
