@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
+using UnityEngine.SceneManagement;
 
 public class mikeInput : MonoBehaviour
 {
@@ -35,7 +37,22 @@ public class mikeInput : MonoBehaviour
     private float bubbleDuration;
 
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    //countdown before blow 
+    public TMP_Text countdownText; // Reference to a UI Text component for the timer display
+    private int countdown = 8; // Countdown duration in seconds
+    public TMP_Text resultText;
+
+
+
+
+
+
+
+
+
+
+
     void Awake()
     {
         bubbleDuration = bubbleParticlesOne.main.startLifetime.constant;
@@ -47,6 +64,7 @@ public class mikeInput : MonoBehaviour
     private void Start() //on start, start detecting microphone input 
     {
         PopulateMic();
+        StartCoroutine(StartCountdown());
     }
 
     private void Update()
@@ -63,6 +81,11 @@ public class mikeInput : MonoBehaviour
             volumeAverage1.Add(volume1);
             volumeAverage2.Add(volume2);
 
+        }
+
+        else
+        {
+            micStart1= false;
         }
     }
 
@@ -281,34 +304,81 @@ public class mikeInput : MonoBehaviour
             Microphone.End(micreophoneDeviceName2);
         }
     }
+    //8 second timer for blowing 
+    // Countdown before blow 
+
+    IEnumerator StartCountdown()
+    {
+        // Loop for the countdown
+        while (countdown > 0)
+        {
+            countdownText.text = countdown.ToString(); // Update the countdown text
+            yield return new WaitForSeconds(1f); // Wait for 1 second
+            countdown--; // Decrease the countdown
+        }
+
+        countdownText.text = "results are"; // Update the text when countdown ends
+        yield return new WaitForSeconds(1f); // Wait for 1 second before calculating score 
+        calculateScore(); // Call the method to calculate the score
+    }
+
+    // Method to calculate the score based on microphone input
+    public GameObject waypoint; // Reference to the waypoint GameObject (set this in the Inspector)
+    public float moveSpeed = 5f; // Speed at which the losing player moves toward the waypoint
+
+    private GameObject loser; // Reference to the losing player
 
     private void calculateScore()
     {
+        // Calculate the average volume for each player
         foreach (float volume in volumeAverage1)
             endScore1 += volume;
-        endScore1 /= volumeAverage1.Count;
+        endScore1 /= volumeAverage1.Count; // Calculate the average volume for player 1
 
         foreach (float volume in volumeAverage2)
             endScore2 += volume;
-        endScore2 /= volumeAverage2.Count;
+        endScore2 /= volumeAverage2.Count; // Calculate the average volume for player 2
 
-        volumeAverage1.Clear();
-        volumeAverage2.Clear();
+        volumeAverage1.Clear(); // Clear the volume data for player 1
+        volumeAverage2.Clear(); // Clear the volume data for player 2
 
-        // Determine the winner
+        // Determine the winner and loser
         if (endScore1 > endScore2)
         {
-            Debug.Log("Player 1 wins with volume: " + endScore1);
+            resultText.text = "Player 1 wins with volume: " + endScore1;
+            loser = playerTwo; // Player 2 is the loser
         }
         else if (endScore2 > endScore1)
         {
-            Debug.Log("Player 2 wins with volume: " + endScore2);
+            resultText.text = "Player 2 wins with volume: " + endScore2;
+            loser = playerOne; // Player 1 is the loser
         }
         else
         {
-            Debug.Log("1: " + endScore1);
-            Debug.Log("2: " + endScore2);
+            resultText.text = "It's a tie!";
+            resultText.text += "\nPlayer 1 score: " + endScore1;
+            resultText.text += "\nPlayer 2 score: " + endScore2;
+            return; // No loser if it's a tie
         }
+
+        // Start the loser moving toward the waypoint
+        StartCoroutine(MoveToWaypoint(loser));
+    }
+
+    // Coroutine to move the losing player to the waypoint
+    private IEnumerator MoveToWaypoint(GameObject player)
+    {
+        while (Vector3.Distance(player.transform.position, waypoint.transform.position) > 0.1f)
+        {
+            // Move the player towards the waypoint at the specified speed
+            player.transform.position = Vector3.MoveTowards(player.transform.position, waypoint.transform.position, moveSpeed * Time.deltaTime);
+
+            yield return null; // Wait for the next frame
+        }
+
+        // Once the player reaches the waypoint, delete the player
+
+        SceneManager.LoadScene(5);
     }
 
 }

@@ -20,9 +20,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Blowing scene.unity
     guid: 4b221ce960cb8634b93430c44b9dbe01
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Sarah Scene 1.unity
     guid: 59a82dd9f8332234e82414201fcb0c49
+  - enabled: 1
+    path: Assets/Scenes/AccGameScenes/endScene.unity
+    guid: 4e000f4836e86b745adc94e04389561e
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

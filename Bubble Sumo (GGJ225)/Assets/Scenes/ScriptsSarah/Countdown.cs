@@ -47,7 +47,9 @@ public class Countdown : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         // Change the scene
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene(4);
+
+
     }
 }
 
