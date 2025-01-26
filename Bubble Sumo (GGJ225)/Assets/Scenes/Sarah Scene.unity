@@ -517,7 +517,6 @@ GameObject:
   - component: {fileID: 271260422}
   - component: {fileID: 271260426}
   - component: {fileID: 271260425}
-  - component: {fileID: 271260424}
   - component: {fileID: 271260423}
   m_Layer: 0
   m_Name: EnemyParticle System
@@ -568,24 +567,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 14
   m_CollisionDetection: 0
---- !u!114 &271260424
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 271260421}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13740aa327d796246b36fcf36880ecc1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  micSenitivity1: 100
-  micDropdown1: {fileID: 328802647}
-  mikeList: []
-  micreophoneDeviceName1: 
-  bubbleParticles: {fileID: 271260426}
-  bubblePosition: {fileID: 271260422}
 --- !u!199 &271260425
 ParticleSystemRenderer:
   serializedVersion: 6
@@ -5546,7 +5527,7 @@ GameObject:
   - component: {fileID: 351314864}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Player
+  m_TagString: Player1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6621,7 +6602,7 @@ GameObject:
   - component: {fileID: 1070673478}
   m_Layer: 0
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Player2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6856,6 +6837,52 @@ Transform:
   - {fileID: 264193910}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1158715191
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1158715192}
+  - component: {fileID: 1158715193}
+  m_Layer: 0
+  m_Name: averageCounter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1158715192
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1158715191}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1970479693}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1158715193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1158715191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18c692d68a08bde408ad97a199511809, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  micDevice1: 
+  micDevice2: 
 --- !u!1 &1225048910
 GameObject:
   m_ObjectHideFlags: 0
@@ -7732,6 +7759,58 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1889106607}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1970479691
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1970479693}
+  - component: {fileID: 1970479692}
+  m_Layer: 0
+  m_Name: Game Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1970479692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1970479691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13740aa327d796246b36fcf36880ecc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  micSenitivity: 25
+  micDropdown1: {fileID: 328802647}
+  mikeList: []
+  micreophoneDeviceName1: 
+  micreophoneDeviceName2: 
+  bubbleParticlesOne: {fileID: 1983253619}
+  bubbleParticlesTwo: {fileID: 271260426}
+--- !u!4 &1970479693
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1970479691}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 478.3123, y: 66.4063, z: -2.4913747}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1158715192}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1983253616
 GameObject:
   m_ObjectHideFlags: 0
@@ -7743,7 +7822,6 @@ GameObject:
   - component: {fileID: 1983253617}
   - component: {fileID: 1983253619}
   - component: {fileID: 1983253618}
-  - component: {fileID: 1983253621}
   - component: {fileID: 1983253622}
   m_Layer: 0
   m_Name: PlayerParticle System
@@ -12567,24 +12645,6 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
---- !u!114 &1983253621
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1983253616}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13740aa327d796246b36fcf36880ecc1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  micSenitivity1: 100
-  micDropdown1: {fileID: 328802647}
-  mikeList: []
-  micreophoneDeviceName1: 
-  bubbleParticles: {fileID: 1983253619}
-  bubblePosition: {fileID: 1983253617}
 --- !u!54 &1983253622
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -12977,3 +13037,4 @@ SceneRoots:
   - {fileID: 1097931524}
   - {fileID: 50079486}
   - {fileID: 851564383}
+  - {fileID: 1970479693}
