@@ -26,7 +26,7 @@ public class BububleControllerScript : MonoBehaviour
         playerDistance = Vector3.Distance(playerOne.transform.position, playerTwo.transform.position);
         float playerMiddleDistance = playerDistance / 2;
 
-
+        //speed and distance calculation
         var mainOne = bubbleParticlesOne.main;
         mainOne.startSpeed = playerMiddleDistance / bubbleDuration;
         var mainTwo = bubbleParticlesTwo.main;
