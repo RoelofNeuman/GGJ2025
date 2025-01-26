@@ -16,9 +16,14 @@ public class Countdown : MonoBehaviour
     public GameObject three;
     public GameObject blow;
 
+    public Animator animator;
+    public Animator animator2;
+
     private void Start()
     {
-           
+        animator.SetBool("inhale", false);
+        animator2.SetBool("inhale", false) ;
+
         if (string.IsNullOrEmpty(nextSceneName))
         {
             Debug.LogError("Next scene name is not specified!");
@@ -48,7 +53,9 @@ public class Countdown : MonoBehaviour
                 one.SetActive(false);
                 two.SetActive(true);
                 three.SetActive(false);
-                
+                animator.SetBool("inhale", true);
+                animator2.SetBool("inhale", true);
+
             }
             if (countdownTime == 3)
             {
@@ -68,7 +75,7 @@ public class Countdown : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         // Change the scene
-        SceneManager.LoadScene(4);
+        SceneManager.LoadScene(3);
     }
 }
 

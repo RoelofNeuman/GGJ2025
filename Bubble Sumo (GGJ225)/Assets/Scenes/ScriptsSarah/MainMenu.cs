@@ -5,11 +5,11 @@ public class MainMenu : MonoBehaviour
 {
     public void mainMenu()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(0);
     }
     public void PlayGame()
     {
-        SceneManager.LoadScene(3);
+        SceneManager.LoadScene(2);
     }
 
     public void SettingsGo()

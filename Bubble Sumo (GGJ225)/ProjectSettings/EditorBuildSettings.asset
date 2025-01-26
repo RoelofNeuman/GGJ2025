@@ -6,9 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Emir Scene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 1
     path: Assets/Scenes/AccGameScenes/StartScreen.unity
     guid: 0fb455334f7ce80449c50d6fcd762c80
   - enabled: 1
@@ -18,11 +15,8 @@ EditorBuildSettings:
     path: Assets/Scenes/AccGameScenes/CountdownSceneSarah.unity
     guid: 93fd752cd035f2346b2ad40670cf07fa
   - enabled: 1
-    path: Assets/Scenes/Blowing scene.unity
+    path: Assets/Scenes/AccGameScenes/Blowing scene.unity
     guid: 4b221ce960cb8634b93430c44b9dbe01
-  - enabled: 0
-    path: Assets/Scenes/Sarah Scene 1.unity
-    guid: 59a82dd9f8332234e82414201fcb0c49
   - enabled: 1
     path: Assets/Scenes/AccGameScenes/endScene.unity
     guid: 4e000f4836e86b745adc94e04389561e

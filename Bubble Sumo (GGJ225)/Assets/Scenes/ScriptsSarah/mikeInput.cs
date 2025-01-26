@@ -378,7 +378,7 @@ public class mikeInput : MonoBehaviour
 
         // Once the player reaches the waypoint, delete the player
 
-        SceneManager.LoadScene(5);
+        SceneManager.LoadScene(4);
     }
 
 }
