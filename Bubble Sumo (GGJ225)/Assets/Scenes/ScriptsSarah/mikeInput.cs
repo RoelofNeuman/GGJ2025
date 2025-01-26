@@ -7,7 +7,7 @@ using TMPro;
 
 public class mikeInput : MonoBehaviour
 {
-    public float micSenitivity = 100f; // mic volume amplifier
+    public float micSenitivity; // mic volume amplifier
     public TMP_Dropdown micDropdown1; 
 
     public List<string> mikeList = new List<string>(); //list from mic devices 
@@ -19,6 +19,10 @@ public class mikeInput : MonoBehaviour
 
     private bool micStart1; // if mic is detected 
     private bool micStart2; // second mic
+    private List<float> volumeAverage1 =new List<float>();
+    private List<float> volumeAverage2 =new List<float>();
+    private float endScore1;
+    private float endScore2;
 
     private int sampleWindow = 128; //samples for analysis 
 
@@ -47,18 +51,23 @@ public class mikeInput : MonoBehaviour
 
     private void Update()
     {
-      
-        
+
         if (micStart1) // If the mic starts 
         {
-            float volume1 = GetMicrophoneVolume(micInput1, micreophoneDeviceName1)* micSenitivity; // Get mic volume
+            float volume1 = GetMicrophoneVolume(micInput1, micreophoneDeviceName1) * micSenitivity; // Get mic volume
             float volume2 = GetMicrophoneVolume(micInput2, micreophoneDeviceName2) * micSenitivity;
             // Smoothly adjust particle effect based on mic volume
             AdjustParticleEffect1(volume1);
             AdjustParticleEffect2(volume2);
-            
+
+            volumeAverage1.Add(volume1);
+            volumeAverage2.Add(volume2);
+
         }
     }
+
+            
+        
 
     private void AdjustParticleEffect1(float micVolume)
     {
@@ -270,6 +279,35 @@ public class mikeInput : MonoBehaviour
         if (micInput2)
         {
             Microphone.End(micreophoneDeviceName2);
+        }
+    }
+
+    private void calculateScore()
+    {
+        foreach (float volume in volumeAverage1)
+            endScore1 += volume;
+        endScore1 /= volumeAverage1.Count;
+
+        foreach (float volume in volumeAverage2)
+            endScore2 += volume;
+        endScore2 /= volumeAverage2.Count;
+
+        volumeAverage1.Clear();
+        volumeAverage2.Clear();
+
+        // Determine the winner
+        if (endScore1 > endScore2)
+        {
+            Debug.Log("Player 1 wins with volume: " + endScore1);
+        }
+        else if (endScore2 > endScore1)
+        {
+            Debug.Log("Player 2 wins with volume: " + endScore2);
+        }
+        else
+        {
+            Debug.Log("1: " + endScore1);
+            Debug.Log("2: " + endScore2);
         }
     }
 
